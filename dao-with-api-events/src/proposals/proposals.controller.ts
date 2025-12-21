@@ -1,28 +1,21 @@
-import { Controller, Get, NotFoundException, BadRequestException, Param } from '@nestjs/common';
-
+import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { ProposalsService } from './proposals.service';
 
 @Controller('proposals')
 export class ProposalsController {
   constructor(private proposalsService: ProposalsService) {}
 
-  @Get('getProposalCreatedEvents')
-  async getProposalCreatedEvents() {
-    try {
-      const events = await this.proposalsService.proposalEvents();
-      return events;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+  @Get()
+  getAllProposals() {
+    return this.proposalsService.getAllProposals();
   }
 
-  @Get(':id')
-  async getProposal(@Param('id') id: string) {
-    try {
-      const proposal = await this.proposalsService.getProposal(Number(id));
-      return proposal;
-    } catch {
+  @Get(':id/votes')
+  getVotesForProposal(@Param('id') id: string) {
+    const votes = this.proposalsService.getVotesForProposal(Number(id));
+    if (!votes) {
       throw new NotFoundException(`Proposal with id ${id} not found`);
     }
+    return votes;
   }
 }
