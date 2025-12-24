@@ -235,8 +235,34 @@ export class ProposalsService implements OnModuleInit, OnModuleDestroy {
     return Array.from(this.proposals.values());
   }
 
+  getProposalById(id: number): Proposal | null {
+    return this.proposals.get(id) || null;
+  }
+
   getVotesForProposal(id: number): VotedEvent[] {
     const proposal = this.proposals.get(id);
     return proposal?.votes || [];
+  }
+
+  getVotingResults(id: number): {
+    proposalId: number;
+    forVotes: number;
+    againstVotes: number;
+    totalVotes: number;
+  } | null {
+    const proposal = this.proposals.get(id);
+    if (!proposal) {
+      return null;
+    }
+
+    const forVotes = proposal.votes.filter((vote) => vote.support).length;
+    const againstVotes = proposal.votes.filter((vote) => !vote.support).length;
+
+    return {
+      proposalId: id,
+      forVotes,
+      againstVotes,
+      totalVotes: proposal.votes.length,
+    };
   }
 }
