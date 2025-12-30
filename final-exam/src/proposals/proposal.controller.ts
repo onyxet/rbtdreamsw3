@@ -5,6 +5,7 @@ import { VoteDto } from './dto/vote.dto';
 import { QueueDto } from './dto/queue.dto';
 import { ExecuteDto } from './dto/execute.dto';
 import { CancelDto } from './dto/cancel.dto';
+import { CreateProposalDto } from './dto/create-proposal.dto';
 import { ProposalState } from './proposal.interface';
 
 @Controller('proposals')
@@ -106,6 +107,11 @@ export class ProposalController {
       };
     }
     return proposal;
+  }
+
+  @Post('create')
+  async createProposal(@Body() createDto: CreateProposalDto) {
+    return this.proposalService.createProposal(createDto);
   }
 
   @Post('vote')
